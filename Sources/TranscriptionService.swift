@@ -22,7 +22,6 @@ class TranscriptionService: ObservableObject {
     print("🚀 TranscriptionService: Initializing...")
     setupWhisperKit()
     checkPermissions()
-    setupKeyboardMonitor()
   }
 
   private func setupWhisperKit() {
@@ -38,23 +37,55 @@ class TranscriptionService: ObservableObject {
 
   // MARK: - Permission Handling
   private func checkPermissions() {
-    print("🔍 Checking all required permissions...")
+    print("🔍 Starting permission check...")
 
-    // Check for accessibility permissions
-    let options = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true]
-    let trusted = AXIsProcessTrustedWithOptions(options as CFDictionary)
-    hasAccessibilityPermissions = trusted
-    print("🔐 Accessibility permission status: \(trusted)")
+    // Initial check
+    checkAndUpdatePermissionStatus()
+  }
 
-    // Re-check after a delay to catch permission changes
-    DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
-        self?.hasAccessibilityPermissions = AXIsProcessTrusted()
+  private func checkAndUpdatePermissionStatus() {
+    let trusted = AXIsProcessTrusted()
+    print("🔐 Current accessibility status: \(trusted)")
+    
+    if !trusted {
+      print("⚠️ Attempting to show permission dialog...")
+      
+      // Force show the permission dialog
+      let options = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true] as CFDictionary
+      let result = AXIsProcessTrustedWithOptions(options)
+      print("📢 Permission dialog result: \(result)")
+      
+//      // Also try to open System Settings directly if needed
+//      DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
+//        if !AXIsProcessTrusted() {
+//          print("🔧 Opening System Settings...")
+//          NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility")!)
+//        }
+//      }
     }
-}
+
+    // Only update UI and setup keyboard if the status changed
+    if hasAccessibilityPermissions != trusted {
+      hasAccessibilityPermissions = trusted
+      
+      if trusted {
+        print("✅ Permission granted - setting up keyboard monitor")
+        setupKeyboardMonitor()
+      } else {
+        print("❌ Permission not granted or was revoked")
+        if let monitor = keyboardMonitor {
+          NSEvent.removeMonitor(monitor)
+          keyboardMonitor = nil
+          print("🧹 Removed existing keyboard monitor")
+        }
+      }
+    }
+  }
 
   // MARK: - Keyboard Monitoring
   private func setupKeyboardMonitor() {
     print("⌨️ Setting up keyboard monitor...")
+    print("🔐 Current accessibility permission status: \(AXIsProcessTrusted())")
 
     // Local monitor for when app is active
     NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [weak self] event in
@@ -75,6 +106,7 @@ class TranscriptionService: ObservableObject {
         self?.handleF5Press()
       }
     }
+
     print("✅ Keyboard monitors successfully set up")
   }
 
