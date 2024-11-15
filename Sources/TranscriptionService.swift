@@ -40,6 +40,7 @@ class TranscriptionService: ObservableObject {
   private func checkPermissions() {
     print("🔍 Checking all required permissions...")
 
+    // Check for accessibility permissions
     let options = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true]
     let trusted = AXIsProcessTrustedWithOptions(options as CFDictionary)
     hasAccessibilityPermissions = trusted
@@ -47,9 +48,9 @@ class TranscriptionService: ObservableObject {
 
     // Re-check after a delay to catch permission changes
     DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
-      self?.hasAccessibilityPermissions = AXIsProcessTrusted()
+        self?.hasAccessibilityPermissions = AXIsProcessTrusted()
     }
-  }
+}
 
   // MARK: - Keyboard Monitoring
   private func setupKeyboardMonitor() {
@@ -86,6 +87,7 @@ class TranscriptionService: ObservableObject {
         print("🛑 Stopping recording...")
         isRecording = false
         isTranscribing = true
+        pasteTranscribedText("Transcribing...")
 
         if let recordingURL = await stopRecording() {
           print("🔤 Starting transcription...")
@@ -97,6 +99,7 @@ class TranscriptionService: ObservableObject {
           } catch {
             print("❌ Transcription failed: \(error)")
             transcriptionResult = "Transcription failed: \(error.localizedDescription)"
+            pasteTranscribedText(transcriptionResult)
           }
         }
         isTranscribing = false
@@ -104,6 +107,7 @@ class TranscriptionService: ObservableObject {
         print("▶️ Starting recording...")
         isRecording = true
         transcriptionResult = ""
+        pasteTranscribedText("Say something...")
         await startRecording()
       }
     }

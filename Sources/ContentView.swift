@@ -9,17 +9,30 @@ struct ContentView: View {
     var body: some View {
         VStack {
             if transcriptionService.isTranscribing {
-                ProgressView("Transcribing...")
-            } else {
-                Button(action: {
-                    // Button is just for visual feedback
-                }) {
-                    Image(systemName: transcriptionService.isRecording ? "stop.circle.fill" : "mic.circle.fill")
-                        .font(.system(size: 44))
-                        .symbolRenderingMode(.multicolor)
-                        .symbolEffect(.bounce, value: transcriptionService.isRecording)
+                VStack {
+                    ProgressView()
+                    Text("Transcribing...")
+                        .font(.headline)
                 }
-                .disabled(transcriptionService.isTranscribing)
+            } else {
+                VStack {
+                    Button(action: {
+                        // Button is just for visual feedback
+                    }) {
+                        Image(systemName: transcriptionService.isRecording ? "stop.circle.fill" : "mic.circle.fill")
+                            .font(.system(size: 44))
+                            .symbolRenderingMode(.multicolor)
+                            .symbolEffect(.bounce, value: transcriptionService.isRecording)
+                    }
+                    .disabled(transcriptionService.isTranscribing)
+                    
+                    if transcriptionService.isRecording {
+                        Text("Say something...")
+                            .font(.headline)
+                            .foregroundStyle(.blue)
+                            .padding(.top, 8)
+                    }
+                }
             }
             
             if !transcriptionService.transcriptionResult.isEmpty {

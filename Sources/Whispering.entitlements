@@ -12,5 +12,7 @@
 	<true/>
 	<key>com.apple.security.temporary-exception.input-monitoring</key>
 	<true/>
+	<key>com.apple.security.temporary-exception.accessibility-api</key>
+	<true/>
 </dict>
 </plist>

@@ -1,0 +1,22 @@
+{
+  "configurations": [
+    {
+      "type": "lldb",
+      "request": "launch",
+      "args": [],
+      "cwd": "${workspaceFolder:Whispering}",
+      "name": "Debug Whispering",
+      "program": "${workspaceFolder:Whispering}/.build/debug/Whispering",
+      "preLaunchTask": "swift: Build Debug Whispering"
+    },
+    {
+      "type": "lldb",
+      "request": "launch",
+      "args": [],
+      "cwd": "${workspaceFolder:Whispering}",
+      "name": "Release Whispering",
+      "program": "${workspaceFolder:Whispering}/.build/release/Whispering",
+      "preLaunchTask": "swift: Build Release Whispering"
+    }
+  ]
+}
