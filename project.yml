@@ -1,0 +1,38 @@
+name: Whispering
+options:
+  bundleIdPrefix: com.whispering
+  deploymentTarget:
+    macOS: 13.0
+  xcodeVersion: "14.0"
+  groupSortPosition: top
+
+settings:
+  base:
+    DEVELOPMENT_TEAM: "" # You'll need to set this
+    SWIFT_VERSION: 5.0
+
+targets:
+  Whispering:
+    type: application
+    platform: macOS
+    sources:
+      - path: Sources
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.whispering.app
+        PRODUCT_NAME: Whispering
+        INFOPLIST_FILE: Sources/Info.plist
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Whispering
+        INFOPLIST_KEY_LSApplicationCategoryType: "public.app-category.utilities"
+        INFOPLIST_KEY_NSHumanReadableCopyright: "Copyright © 2024. All rights reserved."
+        ENABLE_HARDENED_RUNTIME: YES
+        CODE_SIGN_ENTITLEMENTS: Sources/Whispering.entitlements
+    info:
+      path: Sources/Info.plist
+      properties:
+        LSMinimumSystemVersion: "13.0"
+        CFBundleVersion: "1"
+        CFBundleShortVersionString: "1.0.0"
+        NSMainStoryboardFile: ""
+        CFBundleIconFile: ""
