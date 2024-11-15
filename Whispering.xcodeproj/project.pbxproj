@@ -7,7 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1AB21A2AF9DBD36C1FEADF14 /* TranscriptionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E737B78256AA9690F0817F96 /* TranscriptionService.swift */; };
 		52DBF3CAF22EE5FA48D706EB /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7304830A8539D4BFA39FE264 /* ContentView.swift */; };
+		D22900DA4487AD7D7823FF77 /* WhisperKit in Frameworks */ = {isa = PBXBuildFile; productRef = DC3E7EE9CFB9C076CAD9F775 /* WhisperKit */; };
 		D93A96A494DE9F4C7A996A2E /* WhisperingApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDA29DA1099E9E651AE4F011 /* WhisperingApp.swift */; };
 /* End PBXBuildFile section */
 
@@ -17,7 +19,19 @@
 		7304830A8539D4BFA39FE264 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		835F59E8649FFDEE724FF7AC /* Whispering.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Whispering.entitlements; sourceTree = "<group>"; };
 		DDA29DA1099E9E651AE4F011 /* WhisperingApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhisperingApp.swift; sourceTree = "<group>"; };
+		E737B78256AA9690F0817F96 /* TranscriptionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		517D0D1119DA121A5405C7C6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D22900DA4487AD7D7823FF77 /* WhisperKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		329B83341C084B821108D557 /* Products */ = {
@@ -41,6 +55,7 @@
 			children = (
 				7304830A8539D4BFA39FE264 /* ContentView.swift */,
 				6263401813081379AEE71E58 /* Info.plist */,
+				E737B78256AA9690F0817F96 /* TranscriptionService.swift */,
 				835F59E8649FFDEE724FF7AC /* Whispering.entitlements */,
 				DDA29DA1099E9E651AE4F011 /* WhisperingApp.swift */,
 			);
@@ -55,12 +70,16 @@
 			buildConfigurationList = 6921B1356AA9BD3F705E5511 /* Build configuration list for PBXNativeTarget "Whispering" */;
 			buildPhases = (
 				FBC044F16291C9C9BF079179 /* Sources */,
+				517D0D1119DA121A5405C7C6 /* Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = Whispering;
+			packageProductDependencies = (
+				DC3E7EE9CFB9C076CAD9F775 /* WhisperKit */,
+			);
 			productName = Whispering;
 			productReference = 4E92E6440C172C4DA07E7E77 /* Whispering.app */;
 			productType = "com.apple.product-type.application";
@@ -72,11 +91,8 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastUpgradeCheck = 1400;
+				LastUpgradeCheck = 1500;
 				TargetAttributes = {
-					89DA524537B6A7AB8EAF8F03 = {
-						DevelopmentTeam = "";
-					};
 				};
 			};
 			buildConfigurationList = CCA5BBFBA3CF1AC8A805AEEF /* Build configuration list for PBXProject "Whispering" */;
@@ -88,6 +104,9 @@
 				en,
 			);
 			mainGroup = 3F3B3A0A446986DFB1B8E828;
+			packageReferences = (
+				04B35E2016575A501041FBD4 /* XCRemoteSwiftPackageReference "WhisperKit" */,
+			);
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -102,6 +121,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				52DBF3CAF22EE5FA48D706EB /* ContentView.swift in Sources */,
+				1AB21A2AF9DBD36C1FEADF14 /* TranscriptionService.swift in Sources */,
 				D93A96A494DE9F4C7A996A2E /* WhisperingApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -118,15 +138,13 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Sources/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Whispering;
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2024. All rights reserved.";
+				INFOPLIST_KEY_NSAppleEventsUsageDescription = "Whispering needs accessibility access to listen for the F5 key to start/stop recording.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "We need access to your microphone to record audio for transcription";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.whispering.app;
-				PRODUCT_NAME = Whispering;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rudrankriyam.whispering;
 				SDKROOT = macosx;
 			};
 			name = Release;
@@ -166,7 +184,6 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = "";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -183,7 +200,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -230,7 +247,6 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = "";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -241,7 +257,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -261,15 +277,13 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Sources/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Whispering;
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2024. All rights reserved.";
+				INFOPLIST_KEY_NSAppleEventsUsageDescription = "Whispering needs accessibility access to listen for the F5 key to start/stop recording.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "We need access to your microphone to record audio for transcription";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.whispering.app;
-				PRODUCT_NAME = Whispering;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rudrankriyam.whispering;
 				SDKROOT = macosx;
 			};
 			name = Debug;
@@ -296,6 +310,25 @@
 			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		04B35E2016575A501041FBD4 /* XCRemoteSwiftPackageReference "WhisperKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/argmaxinc/WhisperKit.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		DC3E7EE9CFB9C076CAD9F775 /* WhisperKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 04B35E2016575A501041FBD4 /* XCRemoteSwiftPackageReference "WhisperKit" */;
+			productName = WhisperKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 40186F3953AC12DE7A8A1BDF /* Project object */;
 }
