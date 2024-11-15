@@ -3,12 +3,14 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		1AB21A2AF9DBD36C1FEADF14 /* TranscriptionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E737B78256AA9690F0817F96 /* TranscriptionService.swift */; };
+		1D41647255B251719CB2DADD /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63A9F7DAFE2FA6C696551EA /* OnboardingView.swift */; };
 		52DBF3CAF22EE5FA48D706EB /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7304830A8539D4BFA39FE264 /* ContentView.swift */; };
+		54A417970F38A592F14355EC /* WhisperModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CD987623E701CDD85C3C583 /* WhisperModel.swift */; };
 		D22900DA4487AD7D7823FF77 /* WhisperKit in Frameworks */ = {isa = PBXBuildFile; productRef = DC3E7EE9CFB9C076CAD9F775 /* WhisperKit */; };
 		D93A96A494DE9F4C7A996A2E /* WhisperingApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDA29DA1099E9E651AE4F011 /* WhisperingApp.swift */; };
 /* End PBXBuildFile section */
@@ -16,8 +18,10 @@
 /* Begin PBXFileReference section */
 		4E92E6440C172C4DA07E7E77 /* Whispering.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Whispering.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6263401813081379AEE71E58 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		6CD987623E701CDD85C3C583 /* WhisperModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhisperModel.swift; sourceTree = "<group>"; };
 		7304830A8539D4BFA39FE264 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		835F59E8649FFDEE724FF7AC /* Whispering.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Whispering.entitlements; sourceTree = "<group>"; };
+		B63A9F7DAFE2FA6C696551EA /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		DDA29DA1099E9E651AE4F011 /* WhisperingApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhisperingApp.swift; sourceTree = "<group>"; };
 		E737B78256AA9690F0817F96 /* TranscriptionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -34,6 +38,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		101F37D37E70B3919C93EB1F /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				B63A9F7DAFE2FA6C696551EA /* OnboardingView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		1F62B92BAF92D4B02B99816C /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				6CD987623E701CDD85C3C583 /* WhisperModel.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		329B83341C084B821108D557 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -58,6 +78,8 @@
 				E737B78256AA9690F0817F96 /* TranscriptionService.swift */,
 				835F59E8649FFDEE724FF7AC /* Whispering.entitlements */,
 				DDA29DA1099E9E651AE4F011 /* WhisperingApp.swift */,
+				1F62B92BAF92D4B02B99816C /* Models */,
+				101F37D37E70B3919C93EB1F /* Views */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -92,6 +114,8 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+				};
 			};
 			buildConfigurationList = CCA5BBFBA3CF1AC8A805AEEF /* Build configuration list for PBXProject "Whispering" */;
 			compatibilityVersion = "Xcode 14.0";
@@ -119,7 +143,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				52DBF3CAF22EE5FA48D706EB /* ContentView.swift in Sources */,
+				1D41647255B251719CB2DADD /* OnboardingView.swift in Sources */,
 				1AB21A2AF9DBD36C1FEADF14 /* TranscriptionService.swift in Sources */,
+				54A417970F38A592F14355EC /* WhisperModel.swift in Sources */,
 				D93A96A494DE9F4C7A996A2E /* WhisperingApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -132,10 +158,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Sources/Whispering.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = YQZQG7N4WG;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Sources/Info.plist;
@@ -146,7 +169,6 @@
 					"@executable_path/../Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.rudrankriyam.whispering;
-				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
 			};
 			name = Release;
@@ -275,10 +297,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Sources/Whispering.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = YQZQG7N4WG;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Sources/Info.plist;
@@ -289,7 +308,6 @@
 					"@executable_path/../Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.rudrankriyam.whispering;
-				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
 			};
 			name = Debug;

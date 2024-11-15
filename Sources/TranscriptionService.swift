@@ -16,9 +16,11 @@ class TranscriptionService: ObservableObject {
   private var audioRecorder: AVAudioRecorder?
   private var keyboardMonitor: Any?
   private var recordingURL: URL?
+  private let selectedModel: WhisperModel
 
   // MARK: - Initialization
-  init() {
+  init(model: WhisperModel = .base) {
+    self.selectedModel = model
     print("🚀 TranscriptionService: Initializing...")
     setupWhisperKit()
     checkPermissions()
@@ -27,7 +29,7 @@ class TranscriptionService: ObservableObject {
   private func setupWhisperKit() {
     Task {
       do {
-        whisperKit = try await WhisperKit(model: "base")
+        whisperKit = try await WhisperKit(model: selectedModel.rawValue)
         print("✅ WhisperKit setup completed successfully")
       } catch {
         print("❌ Error setting up WhisperKit:", error)
