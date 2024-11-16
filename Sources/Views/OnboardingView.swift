@@ -4,6 +4,7 @@ import WhisperKit
 struct OnboardingView: View {
   @StateObject private var viewModel = OnboardingViewModel()
   @Binding var isOnboardingComplete: Bool
+  let whisperKit: WhisperState
 
   var body: some View {
     VStack(spacing: 24) {
