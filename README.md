@@ -1,12 +1,12 @@
 # Whispering
 
-A beautiful and intuitive macOS application built with SwiftUI.
+A beautiful and intuitive macOS application built with SwiftUI and WhisperKit.
 
 ## Requirements
 
-- macOS 13.0+
-- Xcode 14.0+
-- Swift 5.7+
+- macOS 14.0+
+- Xcode 16.0+
+- Swift 6.0+
 
 ## Installation
 
@@ -16,11 +16,12 @@ A beautiful and intuitive macOS application built with SwiftUI.
 
 ## Features
 
-[Coming Soon]
+1. Directly record from the menu bar using Fn + F5.
+2. (Soon) Use Fn + F5 anywhere.
 
 ## License
 
-This project is licensed under the terms specified in the LICENSE file.
+This project is MIT licensed under the terms specified in the LICENSE file.
 
 ## Contributing
 
