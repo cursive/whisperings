@@ -24,12 +24,13 @@ struct ContentView: View {
                             .symbolRenderingMode(.multicolor)
                             .symbolEffect(.bounce, value: transcriptionService.isRecording)
                     }
+                    .buttonStyle(.plain)
                     .disabled(transcriptionService.isTranscribing)
                     
                     if transcriptionService.isRecording {
-                        Text("Say something...")
+                        Text("Say something.")
                             .font(.headline)
-                            .foregroundStyle(.blue)
+                            .foregroundStyle(.primary)
                             .padding(.top, 8)
                     }
                 }
@@ -41,26 +42,26 @@ struct ContentView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             
-            if !transcriptionService.hasAccessibilityPermissions {
-                VStack(spacing: 12) {
-                    Text("Required Permissions")
-                        .font(.headline)
-                    
-                    PermissionRow(
-                        title: "Accessibility",
-                        description: "Required to paste transcribed text",
-                        action: {
-                            NSWorkspace.shared.open(
-                                URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility")!
-                            )
-                        }
-                    )
-                }
-                .padding()
-                .background(Color.gray.opacity(0.1))
-                .cornerRadius(10)
-                .padding()
-            }
+//            if !transcriptionService.hasAccessibilityPermissions {
+//                VStack(spacing: 12) {
+//                    Text("Required Permissions")
+//                        .font(.headline)
+//                    
+//                    PermissionRow(
+//                        title: "Accessibility",
+//                        description: "Required to paste transcribed text",
+//                        action: {
+//                            NSWorkspace.shared.open(
+//                                URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility")!
+//                            )
+//                        }
+//                    )
+//                }
+//                .padding()
+//                .background(Color.gray.opacity(0.1))
+//                .cornerRadius(10)
+//                .padding()
+//            }
         }
         .padding()
     }

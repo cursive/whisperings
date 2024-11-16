@@ -39,11 +39,11 @@ enum WhisperModel: String, CaseIterable, Identifiable {
   var description: String {
     switch self {
     case .tinyEn, .tiny:
-      return "Fastest, least accurate model (~39MB)"
+      return "Fastest, least accurate model"
     case .baseEn, .base:
-      return "Good balance of speed and accuracy (~142MB)"
+      return "Good balance of speed and accuracy"
     case .smallEn, .small:
-      return "More accurate but slower (~466MB)"
+      return "More accurate but slower"
     case .distilLargeV3:
       return "Distilled version of Large V3, good balance of accuracy and size"
     case .distilLargeV3Optimized:

@@ -1,6 +1,7 @@
 import SwiftUI
 import WhisperKit
 import AVFoundation
+import Cocoa
 
 @MainActor
 class TranscriptionService: ObservableObject {
@@ -17,13 +18,15 @@ class TranscriptionService: ObservableObject {
   private var keyboardMonitor: Any?
   private var recordingURL: URL?
   private let selectedModel: WhisperModel
+  private let accessibilityManager = AccessibilityManager.shared
 
   // MARK: - Initialization
   init(model: WhisperModel = .base) {
     self.selectedModel = model
     print("🚀 TranscriptionService: Initializing...")
     setupWhisperKit()
-    checkPermissions()
+    setupKeyboardMonitor()
+   // setupAccessibilityMonitoring()
   }
 
   private func setupWhisperKit() {
@@ -37,48 +40,29 @@ class TranscriptionService: ObservableObject {
     }
   }
 
-  // MARK: - Permission Handling
-  private func checkPermissions() {
+  private func setupAccessibilityMonitoring() {
     print("🔍 Starting permission check...")
-
-    // Initial check
-    checkAndUpdatePermissionStatus()
-  }
-
-  private func checkAndUpdatePermissionStatus() {
-    let trusted = AXIsProcessTrusted()
-    print("🔐 Current accessibility status: \(trusted)")
     
-    if !trusted {
-      print("⚠️ Attempting to show permission dialog...")
+    // Initial permission request
+    hasAccessibilityPermissions = accessibilityManager.requestAccessibilityPermissions()
+    
+    // Setup continuous monitoring
+    accessibilityManager.startAccessibilityMonitoring { [weak self] status in
+      guard let self = self else { return }
       
-      // Force show the permission dialog
-      let options = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true] as CFDictionary
-      let result = AXIsProcessTrustedWithOptions(options)
-      print("📢 Permission dialog result: \(result)")
-      
-//      // Also try to open System Settings directly if needed
-//      DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
-//        if !AXIsProcessTrusted() {
-//          print("🔧 Opening System Settings...")
-//          NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility")!)
-//        }
-//      }
-    }
-
-    // Only update UI and setup keyboard if the status changed
-    if hasAccessibilityPermissions != trusted {
-      hasAccessibilityPermissions = trusted
-      
-      if trusted {
-        print("✅ Permission granted - setting up keyboard monitor")
-        setupKeyboardMonitor()
-      } else {
-        print("❌ Permission not granted or was revoked")
-        if let monitor = keyboardMonitor {
-          NSEvent.removeMonitor(monitor)
-          keyboardMonitor = nil
-          print("🧹 Removed existing keyboard monitor")
+      if self.hasAccessibilityPermissions != status {
+        self.hasAccessibilityPermissions = status
+        
+        if status {
+          print("✅ Permission granted - setting up keyboard monitor")
+          self.setupKeyboardMonitor()
+        } else {
+          print("❌ Permission not granted or was revoked")
+          if let monitor = self.keyboardMonitor {
+            NSEvent.removeMonitor(monitor)
+            self.keyboardMonitor = nil
+            print("🧹 Removed existing keyboard monitor")
+          }
         }
       }
     }
