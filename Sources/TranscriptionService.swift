@@ -76,7 +76,7 @@ class TranscriptionService: ObservableObject {
     // Local monitor for when app is active
     NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [weak self] event in
       print("⌨️ Local keyboard event detected - keyCode: \(event.keyCode)")
-      if event.keyCode == 96 { // F5
+      if event.keyCode == 96 || event.keyCode == 60 { // Both F5 and plain F5
         print("🎯 F5 key pressed (local)")
         self?.handleF5Press()
         return nil // Consume the event
@@ -87,7 +87,7 @@ class TranscriptionService: ObservableObject {
     // Global monitor for when app is in background
     keyboardMonitor = NSEvent.addGlobalMonitorForEvents(matching: .keyDown) { [weak self] event in
       print("⌨️ Global keyboard event detected - keyCode: \(event.keyCode)")
-      if event.keyCode == 96 { // F5
+      if event.keyCode == 96 || event.keyCode == 60 { // Both F5 and plain F5
         print("🎯 F5 key pressed (global)")
         self?.handleF5Press()
       }

@@ -21,12 +21,13 @@ struct WhisperingApp: App {
     ) {
       ContentView(whisperKit: whisperState)
     }
+    .menuBarExtraStyle(.window)  // Make it a proper window when shown
   }
 
   private func registerGlobalShortcut() {
     NSEvent.addGlobalMonitorForEvents(matching: .keyDown) { event in
       // Check for Command (⌘) + Shift (⇧) + E
-      if event.modifierFlags.contains([.command, .shift]) &&
+      if event.modifierFlags.contains([.command, .shift]) && 
          event.keyCode == 14 { // E key
         toggleApp()
       }
@@ -55,7 +56,7 @@ class WhisperState: ObservableObject {
         let config = WhisperKitConfig()
         self.whisperKit = try await WhisperKit(config)
       } catch {
-        debugPrint("Failed to initialize WhisperKit: \(error)")
+        print("Failed to initialize WhisperKit: \(error)")
         // Handle error appropriately
       }
     }
