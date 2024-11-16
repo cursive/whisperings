@@ -21,7 +21,7 @@
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>NSAppleEventsUsageDescription</key>
-	<string>Whispering needs accessibility access to listen for the F5 key to start/stop recording.</string>
+	<string>Whispering needs accessibility access to respond to keyboard shortcuts and the F5 key for recording control.</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.utilities</string>
 	<key>LSMinimumSystemVersion</key>

@@ -1,5 +1,6 @@
 import SwiftUI
 import WhisperKit
+import Carbon
 
 @main
 struct WhisperingApp: App {
@@ -8,23 +9,37 @@ struct WhisperingApp: App {
   // Create a StateObject to hold the WhisperKit instance
   @StateObject private var whisperState = WhisperState()
 
+  // Add keyboard shortcut monitoring
+  init() {
+  //  registerGlobalShortcut()
+  }
+
   var body: some Scene {
-    //   if isOnboardingComplete {
     MenuBarExtra(
       "Whispering",
       systemImage: "waveform.circle"
     ) {
       ContentView(whisperKit: whisperState)
     }
-    //   } else {
-    //        WindowGroup {
-    //          OnboardingView(isOnboardingComplete: $isOnboardingComplete, whisperKit: whisperState)
-    //            .frame(minWidth: 500, minHeight: 400)
-    //            .background(.ultraThinMaterial)
-    //            .navigationTitle("Whispering")
-    //        }
-    //        .windowStyle(.hiddenTitleBar)
-    //        .windowResizability(.contentSize)
+  }
+
+  private func registerGlobalShortcut() {
+    NSEvent.addGlobalMonitorForEvents(matching: .keyDown) { event in
+      // Check for Command (⌘) + Shift (⇧) + E
+      if event.modifierFlags.contains([.command, .shift]) &&
+         event.keyCode == 14 { // E key
+        toggleApp()
+      }
+    }
+  }
+
+  private func toggleApp() {
+    // Get the MenuBarExtra window
+    if let window = NSApplication.shared.windows.first(where: { $0.isVisible }) {
+      window.close()
+    } else {
+      NSApplication.shared.activate(ignoringOtherApps: true)
+    }
   }
 }
 
@@ -40,7 +55,7 @@ class WhisperState: ObservableObject {
         let config = WhisperKitConfig()
         self.whisperKit = try await WhisperKit(config)
       } catch {
-        print("Failed to initialize WhisperKit: \(error)")
+        debugPrint("Failed to initialize WhisperKit: \(error)")
         // Handle error appropriately
       }
     }
