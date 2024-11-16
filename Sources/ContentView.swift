@@ -5,108 +5,69 @@ import AVFoundation
 @available(macOS 14.0, *)
 struct ContentView: View {
   let whisperKit: WhisperState
-
   @StateObject private var transcriptionService = TranscriptionService()
-
+  
   var body: some View {
-    VStack {
+    VStack(spacing: 12) {
       if transcriptionService.isTranscribing {
-        VStack {
+        VStack(spacing: 8) {
           ProgressView()
           Text("Transcribing...")
             .font(.headline)
         }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 8)
       } else {
-        VStack {
-          Button(action: {
-            // Button is just for visual feedback
-          }) {
-            Image(systemName: transcriptionService.isRecording ? "stop.circle.fill" : "mic.circle.fill")
-              .font(.system(size: 44))
-              .symbolRenderingMode(.multicolor)
-              .symbolEffect(.bounce, value: transcriptionService.isRecording)
-          }
-          .buttonStyle(.plain)
-          .disabled(transcriptionService.isTranscribing)
-
-          if transcriptionService.isRecording {
-            Text("Say something.")
-              .font(.headline)
-              .foregroundStyle(.primary)
-              .padding(.top, 8)
-          }
+        Button(action: {
+          // Button is just for visual feedback
+        }) {
+          Label(
+            transcriptionService.isRecording ? "Stop Recording" : "Start Recording",
+            systemImage: transcriptionService.isRecording ? "stop.circle.fill" : "mic.circle.fill"
+          )
+        }
+        .buttonStyle(.plain)
+        .disabled(transcriptionService.isTranscribing)
+        
+        if transcriptionService.isRecording {
+          Text("Say something.")
+            .font(.subheadline)
+            .foregroundStyle(.secondary)
         }
       }
-
+      
       if !transcriptionService.transcriptionResult.isEmpty {
-        HStack {
+        Divider()
+        
+        VStack(alignment: .leading, spacing: 8) {
+          Text("Last Transcription:")
+            .font(.caption)
+            .foregroundStyle(.secondary)
+          
           Text(transcriptionService.transcriptionResult)
-
-          Spacer()
-
+            .font(.callout)
+            .textSelection(.enabled)
+          
           Button(action: {
             NSPasteboard.general.clearContents()
             NSPasteboard.general.setString(transcriptionService.transcriptionResult, forType: .string)
           }) {
-            Image(systemName: "doc.on.doc")
-              .font(.system(size: 16))
-              .foregroundStyle(.secondary)
+            Label("Copy to Clipboard", systemImage: "doc.on.doc")
+              .font(.caption)
           }
-          .buttonStyle(.plain)
-          .help("Copy transcription")
+          .buttonStyle(.borderless)
+          .frame(maxWidth: .infinity, alignment: .trailing)
         }
-        .padding()
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .frame(maxWidth: 300)
       }
-
-      //            if !transcriptionService.hasAccessibilityPermissions {
-      //                VStack(spacing: 12) {
-      //                    Text("Required Permissions")
-      //                        .font(.headline)
-      //
-      //                    PermissionRow(
-      //                        title: "Accessibility",
-      //                        description: "Required to paste transcribed text",
-      //                        action: {
-      //                            NSWorkspace.shared.open(
-      //                                URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility")!
-      //                            )
-      //                        }
-      //                    )
-      //                }
-      //                .padding()
-      //                .background(Color.gray.opacity(0.1))
-      //                .cornerRadius(10)
-      //                .padding()
-      //            }
+      
+      Divider()
+      
+      Button("Quit") {
+        NSApplication.shared.terminate(nil)
+      }
     }
     .padding()
-
-  }
-}
-
-struct PermissionRow: View {
-  let title: String
-  let description: String
-  let action: () -> Void
-
-  var body: some View {
-    VStack(alignment: .leading) {
-      Text(title)
-        .font(.subheadline)
-        .bold()
-      Text(description)
-        .font(.caption)
-        .foregroundColor(.secondary)
-      Button("Open Settings") {
-        action()
-      }
-      .padding(.top, 4)
-    }
-    .frame(maxWidth: .infinity, alignment: .leading)
-    .padding()
-    .background(Color.white.opacity(0.5))
-    .cornerRadius(8)
   }
 }
 

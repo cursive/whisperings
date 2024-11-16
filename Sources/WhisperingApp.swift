@@ -9,37 +9,22 @@ struct WhisperingApp: App {
   @StateObject private var whisperState = WhisperState()
 
   var body: some Scene {
-    WindowGroup {
-      NavigationStack {
-        if isOnboardingComplete {
-          ContentView(whisperKit: whisperState)
-            .frame(minWidth: 400, minHeight: 300)
-            .background(.ultraThinMaterial)
-            .toolbar {
-              ToolbarItem(placement: .navigation) {
-                Text("Whispering")
-                  .font(.title3)
-                  .fontDesign(.monospaced)
-                  .fontWeight(.semibold)
-              }
-            }
-        } else {
-          OnboardingView(isOnboardingComplete: $isOnboardingComplete, whisperKit: whisperState)
-            .frame(minWidth: 500, minHeight: 400)
-            .background(.ultraThinMaterial)
-            .navigationTitle("Whispering")
-            .toolbar {
-              ToolbarItem(placement: .navigation) {
-                Text("Whispering")
-                  .font(.title2)
-                  .fontWeight(.semibold)
-              }
-            }
-        }
-      }
+    //   if isOnboardingComplete {
+    MenuBarExtra(
+      "Whispering",
+      systemImage: "waveform.circle"
+    ) {
+      ContentView(whisperKit: whisperState)
     }
-    .windowStyle(.hiddenTitleBar)
-    .windowResizability(.contentSize)
+    //   } else {
+    //        WindowGroup {
+    //          OnboardingView(isOnboardingComplete: $isOnboardingComplete, whisperKit: whisperState)
+    //            .frame(minWidth: 500, minHeight: 400)
+    //            .background(.ultraThinMaterial)
+    //            .navigationTitle("Whispering")
+    //        }
+    //        .windowStyle(.hiddenTitleBar)
+    //        .windowResizability(.contentSize)
   }
 }
 
