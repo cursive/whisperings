@@ -39,9 +39,24 @@ struct ContentView: View {
       }
 
       if !transcriptionService.transcriptionResult.isEmpty {
-        Text(transcriptionService.transcriptionResult)
-          .padding()
-          .frame(maxWidth: .infinity, alignment: .leading)
+        HStack {
+          Text(transcriptionService.transcriptionResult)
+
+          Spacer()
+
+          Button(action: {
+            NSPasteboard.general.clearContents()
+            NSPasteboard.general.setString(transcriptionService.transcriptionResult, forType: .string)
+          }) {
+            Image(systemName: "doc.on.doc")
+              .font(.system(size: 16))
+              .foregroundStyle(.secondary)
+          }
+          .buttonStyle(.plain)
+          .help("Copy transcription")
+        }
+        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading)
       }
 
       //            if !transcriptionService.hasAccessibilityPermissions {
@@ -66,6 +81,7 @@ struct ContentView: View {
       //            }
     }
     .padding()
+
   }
 }
 
