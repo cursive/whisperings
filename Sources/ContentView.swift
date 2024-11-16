@@ -6,6 +6,7 @@ import AVFoundation
 struct ContentView: View {
   let whisperKit: WhisperState
   @StateObject private var transcriptionService = TranscriptionService()
+  @AppStorage("autoClipboardCopy") private var autoClipboardCopy = false
   
   var body: some View {
     VStack(spacing: 12) {
@@ -40,27 +41,43 @@ struct ContentView: View {
         Divider()
         
         VStack(alignment: .leading, spacing: 8) {
-          Text("Last Transcription:")
-            .font(.caption)
-            .foregroundStyle(.secondary)
+          HStack {
+            Text("Last Transcription:")
+              .font(.caption)
+              .foregroundStyle(.secondary)
+            
+            Spacer()
+          }
           
           Text(transcriptionService.transcriptionResult)
             .font(.callout)
             .textSelection(.enabled)
+            .onChange(of: transcriptionService.transcriptionResult) { _, newValue in
+              if autoClipboardCopy && !newValue.isEmpty {
+                NSPasteboard.general.clearContents()
+                NSPasteboard.general.setString(newValue, forType: .string)
+              }
+            }
           
-          Button(action: {
-            NSPasteboard.general.clearContents()
-            NSPasteboard.general.setString(transcriptionService.transcriptionResult, forType: .string)
-          }) {
-            Label("Copy to Clipboard", systemImage: "doc.on.doc")
-              .font(.caption)
+          if !autoClipboardCopy {
+            Button(action: {
+              NSPasteboard.general.clearContents()
+              NSPasteboard.general.setString(transcriptionService.transcriptionResult, forType: .string)
+            }) {
+              Label("Copy to Clipboard", systemImage: "doc.on.doc")
+                .font(.caption)
+            }
+            .buttonStyle(.borderless)
+            .frame(maxWidth: .infinity, alignment: .trailing)
           }
-          .buttonStyle(.borderless)
-          .frame(maxWidth: .infinity, alignment: .trailing)
         }
         .frame(maxWidth: 300)
       }
-      
+
+      Divider()
+
+      Toggle("Auto Copy", isOn: $autoClipboardCopy)
+
       Divider()
       
       Button("Quit") {
