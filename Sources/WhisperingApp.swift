@@ -11,7 +11,7 @@ struct WhisperingApp: App {
 
   // Add keyboard shortcut monitoring
   init() {
-  //  registerGlobalShortcut()
+    //  registerGlobalShortcut()
   }
 
   var body: some Scene {
@@ -19,16 +19,36 @@ struct WhisperingApp: App {
       "Whispering",
       systemImage: "waveform.circle"
     ) {
-      ContentView(whisperKit: whisperState)
+      VStack {
+        ContentView(whisperKit: whisperState)
+        Divider()
+        SettingsLink {
+          HStack {
+            Image(systemName: "gear")
+              .imageScale(.small)
+            Text("Settings")
+          }
+          .frame(maxWidth: .infinity, alignment: .leading)
+          .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .padding(.horizontal, 12)
+        .padding(.vertical, 5)
+      }
     }
-    .menuBarExtraStyle(.window)  // Make it a proper window when shown
+    .menuBarExtraStyle(.window)
+
+    Settings {
+      SettingsView()
+        .environmentObject(whisperState)
+    }
   }
 
   private func registerGlobalShortcut() {
     NSEvent.addGlobalMonitorForEvents(matching: .keyDown) { event in
       // Check for Command (⌘) + Shift (⇧) + E
-      if event.modifierFlags.contains([.command, .shift]) && 
-         event.keyCode == 14 { // E key
+      if event.modifierFlags.contains([.command, .shift]) &&
+          event.keyCode == 14 { // E key
         toggleApp()
       }
     }
