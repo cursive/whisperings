@@ -21,19 +21,6 @@ struct WhisperingApp: App {
     ) {
       VStack {
         ContentView(whisperKit: whisperState)
-        Divider()
-        SettingsLink {
-          HStack {
-            Image(systemName: "gear")
-              .imageScale(.small)
-            Text("Settings")
-          }
-          .frame(maxWidth: .infinity, alignment: .leading)
-          .contentShape(Rectangle())
-        }
-        .buttonStyle(.plain)
-        .padding(.horizontal, 12)
-        .padding(.vertical, 5)
       }
     }
     .menuBarExtraStyle(.window)

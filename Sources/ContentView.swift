@@ -20,7 +20,7 @@ struct ContentView: View {
         .padding(.vertical, 8)
       } else {
         Button(action: {
-          // Button is just for visual feedback
+          self.transcriptionService.handleF5Press()
         }) {
           Label(
             transcriptionService.isRecording ? "Stop Recording" : "Start Recording",
@@ -79,9 +79,20 @@ struct ContentView: View {
       Toggle("Auto Copy", isOn: $autoClipboardCopy)
 
       Divider()
-      
-      Button("Quit") {
-        NSApplication.shared.terminate(nil)
+
+      HStack {
+        SettingsLink {
+          Label("Settings", systemImage: "gear")
+            .contentShape(Rectangle())
+        }
+
+        Spacer()
+
+        Button(action: {
+          NSApplication.shared.terminate(nil)
+        }) {
+          Label("Quit", systemImage: "power")
+        }
       }
     }
     .padding()

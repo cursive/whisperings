@@ -97,7 +97,7 @@ class TranscriptionService: ObservableObject {
   }
 
   // MARK: - F5 Key Handling
-  private func handleF5Press() {
+  public func handleF5Press() {
     print("🎙 F5 Press Handler: Processing F5 key press")
 
     Task {
