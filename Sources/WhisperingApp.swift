@@ -15,13 +15,8 @@ struct WhisperingApp: App {
   }
 
   var body: some Scene {
-    MenuBarExtra(
-      "Whispering",
-      systemImage: "waveform.circle"
-    ) {
-      VStack {
-        ContentView(whisperKit: whisperState)
-      }
+    MenuBarExtra("Whispering", systemImage: "waveform.circle") {
+      ContentView(whisperKit: whisperState)
     }
     .menuBarExtraStyle(.window)
 
