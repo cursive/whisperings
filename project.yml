@@ -8,6 +8,9 @@ packages:
   WhisperKit:
     url: https://github.com/argmaxinc/WhisperKit.git
     branch: main
+  KeychainAccess:
+    url: https://github.com/kishikawakatsumi/KeychainAccess.git
+    version: 4.2.2
 
 targets:
   Whispering:
@@ -26,3 +29,4 @@ targets:
         INFOPLIST_KEY_NSAppleEventsUsageDescription: "Whispering needs accessibility access to listen for the F5 key to start/stop recording."
     dependencies:
       - package: WhisperKit
+      - package: KeychainAccess

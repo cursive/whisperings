@@ -10,6 +10,19 @@ struct ContentView: View {
   
   var body: some View {
     VStack(spacing: 12) {
+      HStack {
+        Picker("Mode", selection: $transcriptionService.transcriptionMode) {
+          ForEach(TranscriptionMode.allCases) { mode in
+            Text(mode.id.capitalized).tag(mode)
+          }
+        }
+        .pickerStyle(.segmented)
+        .labelsHidden()
+        
+        Spacer()
+      }
+      .padding(.horizontal)
+      
       if transcriptionService.isTranscribing {
         VStack(spacing: 8) {
           ProgressView()
@@ -47,31 +60,18 @@ struct ContentView: View {
               .foregroundStyle(.secondary)
             
             Spacer()
+            
+            if autoClipboardCopy {
+              Image(systemName: "doc.on.clipboard")
+                .foregroundStyle(.secondary)
+            }
           }
           
           Text(transcriptionService.transcriptionResult)
-            .font(.callout)
             .textSelection(.enabled)
-            .onChange(of: transcriptionService.transcriptionResult) { _, newValue in
-              if autoClipboardCopy && !newValue.isEmpty {
-                NSPasteboard.general.clearContents()
-                NSPasteboard.general.setString(newValue, forType: .string)
-              }
-            }
-          
-          if !autoClipboardCopy {
-            Button(action: {
-              NSPasteboard.general.clearContents()
-              NSPasteboard.general.setString(transcriptionService.transcriptionResult, forType: .string)
-            }) {
-              Label("Copy to Clipboard", systemImage: "doc.on.doc")
-                .font(.caption)
-            }
-            .buttonStyle(.borderless)
-            .frame(maxWidth: .infinity, alignment: .trailing)
-          }
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .frame(maxWidth: 300)
+        .padding(.horizontal)
       }
 
       Divider()

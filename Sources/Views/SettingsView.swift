@@ -1,14 +1,49 @@
 import SwiftUI
 import WhisperKit
+import KeychainAccess
 
 struct SettingsView: View {
   @Environment(\.dismiss) private var dismiss
   @StateObject private var viewModel = SettingsViewModel()
-  
   @EnvironmentObject private var whisperState: WhisperState
   
   var body: some View {
     Form {
+      Section("API Key") {
+        SecureField("Enter API Key", text: $viewModel.apiKey)
+        
+        HStack {
+          Button(action: {
+            Task {
+              await viewModel.saveAPIKey()
+            }
+          }) {
+            Text("Save")
+          }
+          .disabled(viewModel.apiKey.isEmpty)
+          
+          Button(action: {
+            Task {
+              await viewModel.verifyAPIKey()
+            }
+          }) {
+            Text("Verify")
+          }
+          .disabled(viewModel.apiKey.isEmpty)
+        }
+        
+        if viewModel.isVerifying {
+          ProgressView()
+            .frame(maxWidth: .infinity, alignment: .center)
+        }
+        
+        if let apiStatus = viewModel.apiKeyStatus {
+          Text(apiStatus.message)
+            .foregroundStyle(apiStatus.isError ? .red : .green)
+            .font(.caption)
+        }
+      }
+      
       Section("Downloaded Models") {
         if viewModel.isLoading {
           ProgressView()
@@ -55,6 +90,7 @@ struct SettingsView: View {
       if let whisperKit = whisperState.whisperKit {
         await viewModel.fetchDownloadedModels(whisperKit: whisperKit)
       }
+      await viewModel.loadSavedAPIKey()
     }
   }
 }
@@ -64,10 +100,67 @@ class SettingsViewModel: ObservableObject {
   @Published var downloadedModels: [DownloadedModel] = []
   @Published var isLoading = false
   @Published var error: String?
+  @Published var apiKey: String = ""
+  @Published var isVerifying = false
+  @Published var apiKeyStatus: APIKeyStatus?
+  
+  private let keychain = Keychain(service: GroqAPI.keychainService)
+  
+  struct APIKeyStatus {
+    let message: String
+    let isError: Bool
+  }
   
   struct DownloadedModel: Hashable {
     let name: String
     let path: String
+  }
+  
+  func loadSavedAPIKey() async {
+    do {
+      if let savedKey = try keychain.get(GroqAPI.keychainKey) {
+        apiKey = savedKey
+      }
+    } catch {
+      self.error = "Failed to load API key: \(error.localizedDescription)"
+    }
+  }
+  
+  func saveAPIKey() async {
+    do {
+      try keychain.set(apiKey, key: GroqAPI.keychainKey)
+      apiKeyStatus = APIKeyStatus(message: "API key saved successfully", isError: false)
+    } catch {
+      apiKeyStatus = APIKeyStatus(message: "Failed to save API key: \(error.localizedDescription)", isError: true)
+    }
+  }
+  
+  func verifyAPIKey() async {
+    isVerifying = true
+    apiKeyStatus = nil
+    
+    do {
+      var request = URLRequest(url: URL(string: GroqAPI.baseURL)!)
+      request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
+      request.httpMethod = "POST"
+      
+      let (_, response) = try await URLSession.shared.data(for: request)
+      
+      if let httpResponse = response as? HTTPURLResponse {
+        if httpResponse.statusCode == 401 {
+          apiKeyStatus = APIKeyStatus(message: "Invalid API key", isError: true)
+        } else if httpResponse.statusCode == 200 || httpResponse.statusCode == 400 {
+          // 400 is acceptable here as it means the API key is valid but we didn't send proper audio data
+          apiKeyStatus = APIKeyStatus(message: "API key verified successfully", isError: false)
+        } else {
+          apiKeyStatus = APIKeyStatus(message: "Verification failed: HTTP \(httpResponse.statusCode)", isError: true)
+        }
+      }
+    } catch {
+      apiKeyStatus = APIKeyStatus(message: "Verification failed: \(error.localizedDescription)", isError: true)
+    }
+    
+    isVerifying = false
   }
   
   func fetchDownloadedModels(whisperKit: WhisperKit) async {
@@ -118,4 +211,4 @@ class SettingsViewModel: ObservableObject {
       self.error = "Failed to delete model: \(error.localizedDescription)"
     }
   }
-} 
+}
