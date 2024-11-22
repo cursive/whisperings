@@ -1,6 +1,7 @@
 import SwiftUI
 import WhisperKit
 import KeychainAccess
+import KeyboardShortcuts
 
 struct SettingsView: View {
   @Environment(\.dismiss) private var dismiss
@@ -42,6 +43,10 @@ struct SettingsView: View {
             .foregroundStyle(apiStatus.isError ? .red : .green)
             .font(.caption)
         }
+      }
+
+      Section("Keyboard Shortcuts") {
+        KeyboardShortcuts.Recorder("Toggle Recording:", name: .toggleRecording)
       }
       
       Section("Downloaded Models") {

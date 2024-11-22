@@ -33,7 +33,7 @@ struct ContentView: View {
         .padding(.vertical, 8)
       } else {
         Button(action: {
-          self.transcriptionService.handleF5Press()
+            self.transcriptionService.toggleRecording()
         }) {
           Label(
             transcriptionService.isRecording ? "Stop Recording" : "Start Recording",

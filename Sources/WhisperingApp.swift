@@ -1,6 +1,6 @@
 import SwiftUI
 import WhisperKit
-import Carbon
+import KeyboardShortcuts
 
 @main
 struct WhisperingApp: App {
@@ -8,15 +8,15 @@ struct WhisperingApp: App {
 
   // Create a StateObject to hold the WhisperKit instance
   @StateObject private var whisperState = WhisperState()
-
-  // Add keyboard shortcut monitoring
-  init() {
-    //  registerGlobalShortcut()
-  }
+  @StateObject private var transcriptionService = TranscriptionService()
 
   var body: some Scene {
     MenuBarExtra("Whispering", systemImage: "waveform.circle") {
       ContentView(whisperKit: whisperState)
+        .environmentObject(transcriptionService)
+        .onAppear {
+          setupKeyboardShortcut()
+        }
     }
     .menuBarExtraStyle(.window)
 
@@ -26,22 +26,9 @@ struct WhisperingApp: App {
     }
   }
 
-  private func registerGlobalShortcut() {
-    NSEvent.addGlobalMonitorForEvents(matching: .keyDown) { event in
-      // Check for Command (⌘) + Shift (⇧) + E
-      if event.modifierFlags.contains([.command, .shift]) &&
-          event.keyCode == 14 { // E key
-        toggleApp()
-      }
-    }
-  }
-
-  private func toggleApp() {
-    // Get the MenuBarExtra window
-    if let window = NSApplication.shared.windows.first(where: { $0.isVisible }) {
-      window.close()
-    } else {
-      NSApplication.shared.activate(ignoringOtherApps: true)
+  func setupKeyboardShortcut() {
+    KeyboardShortcuts.onKeyDown(for: .toggleRecording) { 
+      transcriptionService.toggleRecording()
     }
   }
 }

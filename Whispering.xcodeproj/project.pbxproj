@@ -11,19 +11,20 @@
 		1AB21A2AF9DBD36C1FEADF14 /* TranscriptionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E737B78256AA9690F0817F96 /* TranscriptionService.swift */; };
 		1D41647255B251719CB2DADD /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63A9F7DAFE2FA6C696551EA /* OnboardingView.swift */; };
 		455E41EC885C40A73D130CF2 /* YourAccessibilityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85ED51AAA23B0F54D9B5388E /* YourAccessibilityManager.swift */; };
-		52DBF3CAF22EE5FA48D706EB /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7304830A8539D4BFA39FE264 /* ContentView.swift */; };
 		54A417970F38A592F14355EC /* WhisperModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CD987623E701CDD85C3C583 /* WhisperModel.swift */; };
 		624FCC9F7A64EF9E27E27068 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CD041D513EFE51D825F57C /* SettingsView.swift */; };
 		6F1F65380D64E11943665CA6 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = 6695D23E344FD1D569AE38BB /* KeychainAccess */; };
+		9ED7407D7363CDB110D0D6B9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FC0D67E7D3961A325D9717 /* ContentView.swift */; };
+		C06F27B76103CA3A5C604237 /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 17D1952162F0F991960D83FD /* KeyboardShortcuts */; };
 		D22900DA4487AD7D7823FF77 /* WhisperKit in Frameworks */ = {isa = PBXBuildFile; productRef = DC3E7EE9CFB9C076CAD9F775 /* WhisperKit */; };
 		D93A96A494DE9F4C7A996A2E /* WhisperingApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDA29DA1099E9E651AE4F011 /* WhisperingApp.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		4E92E6440C172C4DA07E7E77 /* Whispering.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Whispering.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		60FC0D67E7D3961A325D9717 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		6263401813081379AEE71E58 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		6CD987623E701CDD85C3C583 /* WhisperModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhisperModel.swift; sourceTree = "<group>"; };
-		7304830A8539D4BFA39FE264 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		835F59E8649FFDEE724FF7AC /* Whispering.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Whispering.entitlements; sourceTree = "<group>"; };
 		85ED51AAA23B0F54D9B5388E /* YourAccessibilityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YourAccessibilityManager.swift; sourceTree = "<group>"; };
 		B63A9F7DAFE2FA6C696551EA /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
@@ -40,6 +41,7 @@
 			files = (
 				D22900DA4487AD7D7823FF77 /* WhisperKit in Frameworks */,
 				6F1F65380D64E11943665CA6 /* KeychainAccess in Frameworks */,
+				C06F27B76103CA3A5C604237 /* KeyboardShortcuts in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -49,9 +51,9 @@
 		101F37D37E70B3919C93EB1F /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				60FC0D67E7D3961A325D9717 /* ContentView.swift */,
 				B63A9F7DAFE2FA6C696551EA /* OnboardingView.swift */,
 				D2CD041D513EFE51D825F57C /* SettingsView.swift */,
-				7304830A8539D4BFA39FE264 /* ContentView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -113,6 +115,7 @@
 			packageProductDependencies = (
 				DC3E7EE9CFB9C076CAD9F775 /* WhisperKit */,
 				6695D23E344FD1D569AE38BB /* KeychainAccess */,
+				17D1952162F0F991960D83FD /* KeyboardShortcuts */,
 			);
 			productName = Whispering;
 			productReference = 4E92E6440C172C4DA07E7E77 /* Whispering.app */;
@@ -125,7 +128,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastUpgradeCheck = 1620;
+				LastUpgradeCheck = 1500;
 			};
 			buildConfigurationList = CCA5BBFBA3CF1AC8A805AEEF /* Build configuration list for PBXProject "Whispering" */;
 			compatibilityVersion = "Xcode 14.0";
@@ -137,6 +140,7 @@
 			);
 			mainGroup = 3F3B3A0A446986DFB1B8E828;
 			packageReferences = (
+				12EF188A9556D9487854F533 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */,
 				FDF72A885E132A137C60FEB5 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
 				04B35E2016575A501041FBD4 /* XCRemoteSwiftPackageReference "WhisperKit" */,
 			);
@@ -154,7 +158,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1935BBDA24FD2351FED07F20 /* Constants.swift in Sources */,
-				52DBF3CAF22EE5FA48D706EB /* ContentView.swift in Sources */,
+				9ED7407D7363CDB110D0D6B9 /* ContentView.swift in Sources */,
 				1D41647255B251719CB2DADD /* OnboardingView.swift in Sources */,
 				624FCC9F7A64EF9E27E27068 /* SettingsView.swift in Sources */,
 				1AB21A2AF9DBD36C1FEADF14 /* TranscriptionService.swift in Sources */,
@@ -172,23 +176,18 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Sources/Whispering.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = YQZQG7N4WG;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Sources/Info.plist;
 				INFOPLIST_KEY_NSAppleEventsUsageDescription = "Whispering needs accessibility access to listen for the F5 key to start/stop recording.";
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "We need Bluetooth access to use AirPods for audio recording";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "We need access to your microphone to record audio for transcription";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.rudrankriyam.whispering;
-				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
 			};
 			name = Release;
@@ -227,11 +226,9 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -292,11 +289,9 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -321,23 +316,18 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Sources/Whispering.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = YQZQG7N4WG;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Sources/Info.plist;
 				INFOPLIST_KEY_NSAppleEventsUsageDescription = "Whispering needs accessibility access to listen for the F5 key to start/stop recording.";
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "We need Bluetooth access to use AirPods for audio recording";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "We need access to your microphone to record audio for transcription";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.rudrankriyam.whispering;
-				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
 			};
 			name = Debug;
@@ -374,6 +364,14 @@
 				kind = branch;
 			};
 		};
+		12EF188A9556D9487854F533 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sindresorhus/KeyboardShortcuts.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
 		FDF72A885E132A137C60FEB5 /* XCRemoteSwiftPackageReference "KeychainAccess" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kishikawakatsumi/KeychainAccess.git";
@@ -385,6 +383,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		17D1952162F0F991960D83FD /* KeyboardShortcuts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 12EF188A9556D9487854F533 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */;
+			productName = KeyboardShortcuts;
+		};
 		6695D23E344FD1D569AE38BB /* KeychainAccess */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = FDF72A885E132A137C60FEB5 /* XCRemoteSwiftPackageReference "KeychainAccess" */;

@@ -34,12 +34,12 @@ enum TranscriptionMode: Identifiable, CaseIterable {
 class TranscriptionService: NSObject, ObservableObject, AVAudioRecorderDelegate {
     // MARK: - Published Properties
     @Published var hasInputMonitoringPermission = false
-    @Published var hasAccessibilityPermissions = false
     @Published var isRecording = false
     @Published var isTranscribing = false
     @Published var transcriptionResult = ""
     @Published var selectedTranscriptionModel: TranscriptionModel = .distilWhisperLargeV3En
     @Published var transcriptionMode: TranscriptionMode = .offline
+    @Published private var isProcessing = false
 
     // MARK: - Private Properties
     private var whisperKit: WhisperKit?
@@ -57,8 +57,6 @@ class TranscriptionService: NSObject, ObservableObject, AVAudioRecorderDelegate 
 
         super.init()
         setupWhisperKit()
-        setupKeyboardMonitor()
-        // setupAccessibilityMonitoring()
     }
 
     private func setupWhisperKit() {
@@ -68,34 +66,6 @@ class TranscriptionService: NSObject, ObservableObject, AVAudioRecorderDelegate 
                 print("✅ WhisperKit setup completed successfully")
             } catch {
                 print("❌ Error setting up WhisperKit:", error)
-            }
-        }
-    }
-
-    private func setupAccessibilityMonitoring() {
-        print("🔍 Starting permission check...")
-        
-        // Initial permission request
-        hasAccessibilityPermissions = accessibilityManager.requestAccessibilityPermissions()
-        
-        // Setup continuous monitoring
-        accessibilityManager.startAccessibilityMonitoring { [weak self] status in
-            guard let self = self else { return }
-            
-            if self.hasAccessibilityPermissions != status {
-                self.hasAccessibilityPermissions = status
-                
-                if status {
-                    print("✅ Permission granted - setting up keyboard monitor")
-                    self.setupKeyboardMonitor()
-                } else {
-                    print("❌ Permission not granted or was revoked")
-                    if let monitor = self.keyboardMonitor {
-                        NSEvent.removeMonitor(monitor)
-                        self.keyboardMonitor = nil
-                        print("🧹 Removed existing keyboard monitor")
-                    }
-                }
             }
         }
     }
@@ -110,7 +80,7 @@ class TranscriptionService: NSObject, ObservableObject, AVAudioRecorderDelegate 
             print("⌨️ Local keyboard event detected - keyCode: \(event.keyCode)")
             if event.keyCode == 96 || event.keyCode == 60 { // Both F5 and plain F5
                 print("🎯 F5 key pressed (local)")
-                self?.handleF5Press()
+                self?.toggleRecording()
                 return nil // Consume the event
             }
             return event
@@ -121,7 +91,7 @@ class TranscriptionService: NSObject, ObservableObject, AVAudioRecorderDelegate 
             print("⌨️ Global keyboard event detected - keyCode: \(event.keyCode)")
             if event.keyCode == 96 || event.keyCode == 60 { // Both F5 and plain F5
                 print("🎯 F5 key pressed (global)")
-                self?.handleF5Press()
+                self?.toggleRecording()
             }
         }
 
@@ -129,30 +99,46 @@ class TranscriptionService: NSObject, ObservableObject, AVAudioRecorderDelegate 
     }
 
     // MARK: - F5 Key Handling
-    public func handleF5Press() {
-        print("🎙 F5 Press Handler: Processing F5 key press")
-
+    public func toggleRecording() {
+        // Guard against multiple triggers while processing
+        guard !isProcessing else {
+            print("⚠️ Already processing a recording operation")
+            return
+        }
+        
+        guard !isTranscribing else {
+            print("⚠️ Currently transcribing, please wait")
+            return
+        }
+        
         Task {
-            if audioRecorder?.isRecording == true {
+            isProcessing = true
+            defer { isProcessing = false }
+            
+            if isRecording {
                 print("🛑 Stopping recording...")
                 isRecording = false
-                isTranscribing = true
+                transcriptionResult = "Transcribing..."
                 pasteTranscribedText("Transcribing...")
 
-                if let recordingURL = await stopRecording() {
+                if let resultURL = await stopRecording() {
+
+                    isTranscribing = true
                     print("🔤 Starting transcription...")
-                    do {
-                        let result = try await transcribe(audio: recordingURL)
-                        transcriptionResult = result
-                        print("✅ Transcription completed: \(transcriptionResult)")
-                        pasteTranscribedText(transcriptionResult)
-                    } catch {
-                        print("❌ Transcription failed: \(error)")
-                        transcriptionResult = "Transcription failed: \(error.localizedDescription)"
-                        pasteTranscribedText(transcriptionResult)
-                    }
+
+                    switch transcriptionMode {
+                        case .offline:
+                                transcriptionResult = try await transcribeOffline(audio: resultURL)
+                                pasteTranscribedText(transcriptionResult)
+                            isTranscribing = false
+                        case .online:
+                                transcriptionResult = try await transcribeOffline(audio: resultURL)
+                                pasteTranscribedText(transcriptionResult)
+                            }
+                } else {
+                    isTranscribing = false
                 }
-                isTranscribing = false
+
             } else {
                 print("▶️ Starting recording...")
                 isRecording = true
@@ -458,11 +444,11 @@ class TranscriptionService: NSObject, ObservableObject, AVAudioRecorderDelegate 
 
 // Add AVAudioRecorderDelegate methods
 extension TranscriptionService {
-    func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {
+    nonisolated func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {
         print("🎤 Recording finished - Success: \(flag)")
     }
     
-    func audioRecorderEncodeErrorDidOccur(_ recorder: AVAudioRecorder, error: Error?) {
+    nonisolated func audioRecorderEncodeErrorDidOccur(_ recorder: AVAudioRecorder, error: Error?) {
         if let error = error {
             print("❌ Recording encode error: \(error)")
         }

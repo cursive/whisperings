@@ -11,6 +11,9 @@ packages:
   KeychainAccess:
     url: https://github.com/kishikawakatsumi/KeychainAccess.git
     version: 4.2.2
+  KeyboardShortcuts:
+    url: https://github.com/sindresorhus/KeyboardShortcuts.git
+    from: 2.0.0
 
 targets:
   Whispering:
@@ -31,3 +34,4 @@ targets:
     dependencies:
       - package: WhisperKit
       - package: KeychainAccess
+      - package: KeyboardShortcuts
