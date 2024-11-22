@@ -164,6 +164,16 @@ class TranscriptionService: ObservableObject {
     // MARK: - Recording Functions
     private func startRecording() async {
         print("🎙 Starting recording process...")
+        
+        // Check for audio input availability first
+        guard checkAudioInputAvailability() else {
+            await MainActor.run {
+                showNoAudioInputAlert()
+                isRecording = false
+            }
+            return
+        }
+        
         let settings = [
             AVFormatIDKey: Int(kAudioFormatLinearPCM),
             AVSampleRateKey: 16000,
@@ -183,6 +193,9 @@ class TranscriptionService: ObservableObject {
             }
         } catch {
             print("❌ Failed to start recording: \(error)")
+            await MainActor.run {
+                isRecording = false
+            }
         }
     }
 
@@ -319,6 +332,43 @@ class TranscriptionService: ObservableObject {
         if let monitor = keyboardMonitor {
             NSEvent.removeMonitor(monitor)
             print("🧹 Removed keyboard monitor")
+        }
+    }
+
+    private func checkAudioInputAvailability() -> Bool {
+        // Create a discovery session for audio devices
+        let discoverySession = AVCaptureDevice.DiscoverySession(
+            deviceTypes: [.microphone, .external],
+            mediaType: .audio,
+            position: .unspecified
+        )
+        
+        let devices = discoverySession.devices
+        let hasInputDevices = !devices.isEmpty
+        
+        if !hasInputDevices {
+            print("❌ No audio input devices found")
+        } else {
+            print("✅ Found \(devices.count) audio input device(s)")
+            devices.forEach { device in
+                print("📱 Device: \(device.localizedName)")
+            }
+        }
+        
+        return hasInputDevices
+    }
+
+    private func showNoAudioInputAlert() {
+        let alert = NSAlert()
+        alert.messageText = "No Audio Input Available"
+        alert.informativeText = "Please connect a microphone or ensure your system's audio input is properly configured in System Settings."
+        alert.alertStyle = .warning
+        alert.addButton(withTitle: "Open Sound Settings")
+        alert.addButton(withTitle: "Cancel")
+        
+        let response = alert.runModal()
+        if response == .alertFirstButtonReturn {
+            NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.sound")!)
         }
     }
 }

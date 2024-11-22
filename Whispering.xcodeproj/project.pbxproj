@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 56;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -51,6 +51,7 @@
 			children = (
 				B63A9F7DAFE2FA6C696551EA /* OnboardingView.swift */,
 				D2CD041D513EFE51D825F57C /* SettingsView.swift */,
+				7304830A8539D4BFA39FE264 /* ContentView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -83,7 +84,6 @@
 			isa = PBXGroup;
 			children = (
 				E1A0B8C779C39E5C5985C23C /* Constants.swift */,
-				7304830A8539D4BFA39FE264 /* ContentView.swift */,
 				6263401813081379AEE71E58 /* Info.plist */,
 				E737B78256AA9690F0817F96 /* TranscriptionService.swift */,
 				835F59E8649FFDEE724FF7AC /* Whispering.entitlements */,
@@ -126,8 +126,6 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1500;
-				TargetAttributes = {
-				};
 			};
 			buildConfigurationList = CCA5BBFBA3CF1AC8A805AEEF /* Build configuration list for PBXProject "Whispering" */;
 			compatibilityVersion = "Xcode 14.0";
