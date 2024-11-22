@@ -3,6 +3,7 @@ import WhisperKit
 import AVFoundation
 import Cocoa
 import KeychainAccess
+import Carbon.HIToolbox
 
 // MARK: - Transcription Models
 enum TranscriptionModel: String {
@@ -47,7 +48,6 @@ class TranscriptionService: NSObject, ObservableObject, AVAudioRecorderDelegate 
     private var keyboardMonitor: Any?
     private var recordingURL: URL?
     private let selectedModel: WhisperModel
-    private let accessibilityManager = AccessibilityManager.shared
     private let keychain = Keychain(service: GroqAPI.keychainService)
 
     // MARK: - Initialization
@@ -110,7 +110,7 @@ class TranscriptionService: NSObject, ObservableObject, AVAudioRecorderDelegate 
             print("⚠️ Currently transcribing, please wait")
             return
         }
-        
+
         Task {
             isProcessing = true
             defer { isProcessing = false }
@@ -334,35 +334,51 @@ class TranscriptionService: NSObject, ObservableObject, AVAudioRecorderDelegate 
 
     // MARK: - Paste Handling
     private func pasteTranscribedText(_ text: String) {
-        print("📋 Attempting to paste text: \(text)")
+        Task {
+            await MainActor.run {
+                print("📋 Attempting to paste text: \(text)")
+                // Save current clipboard content
+                let pasteboard = NSPasteboard.general
+                let oldContent = pasteboard.string(forType: .string)
+                
+                // Copy new text to clipboard
+                pasteboard.clearContents()
+                pasteboard.setString(text, forType: .string)
+                
+                // Simulate Cmd+V keystroke
+                let source = CGEventSource(stateID: .hidSystemState)
+                
+                // Create Command down event
+                let cmdDown = CGEvent(keyboardEventSource: source, virtualKey: CGKeyCode(kVK_Command), keyDown: true)
+                
+                // Create 'v' key down event
+                let vDown = CGEvent(keyboardEventSource: source, virtualKey: CGKeyCode(kVK_ANSI_V), keyDown: true)
+                vDown?.flags = .maskCommand
+                
+                // Create 'v' key up event
+                let vUp = CGEvent(keyboardEventSource: source, virtualKey: CGKeyCode(kVK_ANSI_V), keyDown: false)
+                vUp?.flags = .maskCommand
+                
+                // Create Command up event
+                let cmdUp = CGEvent(keyboardEventSource: source, virtualKey: CGKeyCode(kVK_Command), keyDown: false)
+                
+                // Post the events
+                cmdDown?.post(tap: .cghidEventTap)
+                vDown?.post(tap: .cghidEventTap)
+                vUp?.post(tap: .cghidEventTap)
+                cmdUp?.post(tap: .cghidEventTap)
+                
+                print("✅ Paste command sent successfully")
 
-        // Create a temporary pasteboard
-        let pasteboard = NSPasteboard.general
-        pasteboard.clearContents()
-        pasteboard.setString(text, forType: .string)
-
-        // Simulate Cmd+V keystroke
-        let source = CGEventSource(stateID: .hidSystemState)
-
-        // Create key down and up events for Command key (⌘)
-        let cmdKeyDown = CGEvent(keyboardEventSource: source, virtualKey: 0x37, keyDown: true)
-        let cmdKeyUp = CGEvent(keyboardEventSource: source, virtualKey: 0x37, keyDown: false)
-
-        // Create key down and up events for V key
-        let vKeyDown = CGEvent(keyboardEventSource: source, virtualKey: 0x09, keyDown: true)
-        let vKeyUp = CGEvent(keyboardEventSource: source, virtualKey: 0x09, keyDown: false)
-
-        // Set command flag for V key events
-        vKeyDown?.flags = .maskCommand
-        vKeyUp?.flags = .maskCommand
-
-        // Post the events in sequence
-        cmdKeyDown?.post(tap: .cghidEventTap)
-        vKeyDown?.post(tap: .cghidEventTap)
-        vKeyUp?.post(tap: .cghidEventTap)
-        cmdKeyUp?.post(tap: .cghidEventTap)
-
-        print("✅ Paste command sent successfully")
+                // Restore previous clipboard content after a short delay
+//                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+//                    if let oldContent = oldContent {
+//                        pasteboard.clearContents()
+//                        pasteboard.setString(oldContent, forType: .string)
+//                    }
+//                }
+            }
+        }
     }
 
     // MARK: - Cleanup
@@ -423,6 +439,32 @@ class TranscriptionService: NSObject, ObservableObject, AVAudioRecorderDelegate 
             print("- \(device.localizedName) (ID: \(device.uniqueID))")
             print("  Manufacturer: \(device.manufacturer)")
             print("  Connected: \(device.isConnected)")
+        }
+    }
+
+    private func checkInputMonitoringPermission() async -> Bool {
+        let trusted = CGPreflightListenEventAccess()
+        if !trusted {
+            await MainActor.run {
+                showInputMonitoringAlert()
+            }
+            return false
+        }
+        return true
+    }
+
+    @MainActor
+    private func showInputMonitoringAlert() {
+        let alert = NSAlert()
+        alert.messageText = "Input Monitoring Permission Required"
+        alert.informativeText = "Please enable Input Monitoring for this app in System Settings to allow pasting text."
+        alert.alertStyle = .warning
+        alert.addButton(withTitle: "Open Settings")
+        alert.addButton(withTitle: "Cancel")
+        
+        let response = alert.runModal()
+        if response == .alertFirstButtonReturn {
+            NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_ListenEvent")!)
         }
     }
 }
