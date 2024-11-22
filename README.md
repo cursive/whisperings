@@ -1,6 +1,6 @@
 # Whispering
 
-A beautiful and intuitive macOS application built with SwiftUI and WhisperKit.
+A simple macOS menubar app built with SwiftUI and WhisperKit.
 
 ## Requirements
 
@@ -18,7 +18,7 @@ A beautiful and intuitive macOS application built with SwiftUI and WhisperKit.
 ## Features
 
 1. Directly record from the menu bar using Fn + F5.
-2. (Soon) Use Fn + F5 anywhere.
+2. Use Fn + F5 (or customise the key from settings) anywhere.
 
 ## License
 
