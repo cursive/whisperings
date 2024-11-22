@@ -161,23 +161,11 @@ class TranscriptionService: NSObject, ObservableObject, AVAudioRecorderDelegate 
         print("🎧 Available Audio Input Devices:")
         for device in discoverySession.devices {
             print("📱 Device: \(device.localizedName) (ID: \(device.uniqueID))")
-            
-            if device.localizedName.contains("AirPods") {
-                do {
-                    try device.lockForConfiguration()
-                    // Set any device-specific configurations here if needed
-                    device.unlockForConfiguration()
-                    print("✅ Successfully configured AirPods")
-                    return true
-                } catch {
-                    print("❌ Failed to configure AirPods: \(error)")
-                    return false
-                }
-            }
+            print("  Manufacturer: \(device.manufacturer)")
+            print("  Connected: \(device.isConnected)")
         }
         
-        print("❌ No AirPods found")
-        return false
+      return !discoverySession.devices.isEmpty
     }
 
     private func startRecording() async {

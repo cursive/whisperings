@@ -10,8 +10,18 @@ struct WhisperingApp: App {
   @StateObject private var whisperState = WhisperState()
   @StateObject private var transcriptionService = TranscriptionService()
 
+  var menuBarIcon: String {
+    if transcriptionService.isRecording {
+      return "record.circle"
+    } else if transcriptionService.isTranscribing {
+      return "waveform.circle.fill"
+    } else {
+      return "waveform.circle"
+    }
+  }
+
   var body: some Scene {
-    MenuBarExtra("Whispering", systemImage: "waveform.circle") {
+    MenuBarExtra("Whispering", systemImage: menuBarIcon) {
       ContentView(whisperKit: whisperState)
         .environmentObject(transcriptionService)
         .onAppear {
