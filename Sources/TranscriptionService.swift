@@ -31,7 +31,7 @@ enum TranscriptionMode: Identifiable, CaseIterable {
 }
 
 @MainActor
-class TranscriptionService: ObservableObject {
+class TranscriptionService: NSObject, ObservableObject, AVAudioRecorderDelegate {
     // MARK: - Published Properties
     @Published var hasInputMonitoringPermission = false
     @Published var hasAccessibilityPermissions = false
@@ -54,6 +54,8 @@ class TranscriptionService: ObservableObject {
     init(model: WhisperModel = .base) {
         self.selectedModel = model
         print("🚀 TranscriptionService: Initializing...")
+
+        super.init()
         setupWhisperKit()
         setupKeyboardMonitor()
         // setupAccessibilityMonitoring()
@@ -162,11 +164,41 @@ class TranscriptionService: ObservableObject {
     }
 
     // MARK: - Recording Functions
+    private func configureAudioInput() -> Bool {
+        // Get all audio devices
+        let discoverySession = AVCaptureDevice.DiscoverySession(
+            deviceTypes: [.microphone, .external],
+            mediaType: .audio,
+            position: .unspecified
+        )
+        
+        print("🎧 Available Audio Input Devices:")
+        for device in discoverySession.devices {
+            print("📱 Device: \(device.localizedName) (ID: \(device.uniqueID))")
+            
+            if device.localizedName.contains("AirPods") {
+                do {
+                    try device.lockForConfiguration()
+                    // Set any device-specific configurations here if needed
+                    device.unlockForConfiguration()
+                    print("✅ Successfully configured AirPods")
+                    return true
+                } catch {
+                    print("❌ Failed to configure AirPods: \(error)")
+                    return false
+                }
+            }
+        }
+        
+        print("❌ No AirPods found")
+        return false
+    }
+
     private func startRecording() async {
         print("🎙 Starting recording process...")
         
-        // Check for audio input availability first
-        guard checkAudioInputAvailability() else {
+        guard configureAudioInput() else {
+            print("❌ Failed to configure audio input")
             await MainActor.run {
                 showNoAudioInputAlert()
                 isRecording = false
@@ -174,28 +206,64 @@ class TranscriptionService: ObservableObject {
             return
         }
         
-        let settings = [
-            AVFormatIDKey: Int(kAudioFormatLinearPCM),
-            AVSampleRateKey: 16000,
+        // Wait for device to stabilize
+        try? await Task.sleep(nanoseconds: 1_000_000_000)
+        
+        let settings: [String: Any] = [
+            AVFormatIDKey: Int(kAudioFormatMPEG4AAC), // Using AAC for better Bluetooth compatibility
+            AVSampleRateKey: 24000.0,
             AVNumberOfChannelsKey: 1,
+            AVEncoderBitRateKey: 64000,
             AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue
         ]
 
         do {
             let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-            recordingURL = documentsPath.appendingPathComponent("recording.wav")
+            recordingURL = documentsPath.appendingPathComponent("recording.m4a")
 
             if let url = recordingURL {
                 print("📝 Recording to URL: \(url.path)")
+                
+                // Remove existing file if it exists
+                try? FileManager.default.removeItem(at: url)
+                
                 audioRecorder = try AVAudioRecorder(url: url, settings: settings)
-                audioRecorder?.record()
-                print("✅ Recording started successfully")
+                audioRecorder?.delegate = self
+                audioRecorder?.isMeteringEnabled = true
+                
+                if audioRecorder?.prepareToRecord() == true {
+                    print("✅ Prepared to record")
+                    if audioRecorder?.record() == true {
+                        print("✅ Recording started successfully")
+                        // Start monitoring audio levels
+                        startAudioLevelMonitoring()
+                    } else {
+                        throw NSError(domain: "RecordingError", code: -1, 
+                            userInfo: [NSLocalizedDescriptionKey: "Failed to start recording"])
+                    }
+                } else {
+                    throw NSError(domain: "RecordingError", code: -1, 
+                        userInfo: [NSLocalizedDescriptionKey: "Failed to prepare recording"])
+                }
             }
         } catch {
             print("❌ Failed to start recording: \(error)")
             await MainActor.run {
                 isRecording = false
             }
+        }
+    }
+
+    private func startAudioLevelMonitoring() {
+        Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] timer in
+            guard let self = self, self.isRecording else {
+                timer.invalidate()
+                return
+            }
+            self.audioRecorder?.updateMeters()
+            let averagePower = self.audioRecorder?.averagePower(forChannel: 0) ?? -160
+            let peakPower = self.audioRecorder?.peakPower(forChannel: 0) ?? -160
+            print("📊 Audio Levels - Avg: \(averagePower) dB, Peak: \(peakPower) dB")
         }
     }
 
@@ -369,6 +437,34 @@ class TranscriptionService: ObservableObject {
         let response = alert.runModal()
         if response == .alertFirstButtonReturn {
             NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.sound")!)
+        }
+    }
+
+    private func logAudioDevices() {
+        let discoverySession = AVCaptureDevice.DiscoverySession(
+            deviceTypes: [.microphone, .external],
+            mediaType: .audio,
+            position: .unspecified
+        )
+        
+        print("🎧 Available Audio Devices:")
+        discoverySession.devices.forEach { device in
+            print("- \(device.localizedName) (ID: \(device.uniqueID))")
+            print("  Manufacturer: \(device.manufacturer)")
+            print("  Connected: \(device.isConnected)")
+        }
+    }
+}
+
+// Add AVAudioRecorderDelegate methods
+extension TranscriptionService {
+    func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {
+        print("🎤 Recording finished - Success: \(flag)")
+    }
+    
+    func audioRecorderEncodeErrorDidOccur(_ recorder: AVAudioRecorder, error: Error?) {
+        if let error = error {
+            print("❌ Recording encode error: \(error)")
         }
     }
 }

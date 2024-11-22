@@ -27,6 +27,7 @@ targets:
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_KEY_NSMicrophoneUsageDescription: "We need access to your microphone to record audio for transcription"
         INFOPLIST_KEY_NSAppleEventsUsageDescription: "Whispering needs accessibility access to listen for the F5 key to start/stop recording."
+        INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription: "We need Bluetooth access to use AirPods for audio recording"
     dependencies:
       - package: WhisperKit
       - package: KeychainAccess
