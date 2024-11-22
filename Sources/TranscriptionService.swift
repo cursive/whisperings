@@ -192,9 +192,6 @@ class TranscriptionService: NSObject, ObservableObject, AVAudioRecorderDelegate 
             return
         }
         
-        // Wait for device to stabilize
-        try? await Task.sleep(nanoseconds: 1_000_000_000)
-        
         let settings: [String: Any] = [
             AVFormatIDKey: Int(kAudioFormatMPEG4AAC), // Using AAC for better Bluetooth compatibility
             AVSampleRateKey: 24000.0,
