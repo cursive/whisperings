@@ -4,7 +4,7 @@ A simple macOS menubar app built with SwiftUI and WhisperKit.
 
 ## Requirements
 
-- **Only Apple Silicon Macs**
+- **Only Apple Silicon Mac for on-device; Intel can use via Groq API**
 - macOS 14.0+
 - Xcode 16.0+
 - Swift 6.0+
