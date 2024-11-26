@@ -122,20 +122,32 @@ class TranscriptionService: NSObject, ObservableObject, AVAudioRecorderDelegate 
                 pasteTranscribedText("Transcribing...")
 
                 if let resultURL = await stopRecording() {
-
+                    
                     isTranscribing = true
                     print("🔤 Starting transcription...")
-
+                    
                     switch transcriptionMode {
-                        case .offline:
-                                transcriptionResult = try await transcribeOffline(audio: resultURL)
-                                pasteTranscribedText(transcriptionResult)
-                            isTranscribing = false
-                        case .online:
-                                transcriptionResult = try await transcribeOffline(audio: resultURL)
-                                pasteTranscribedText(transcriptionResult)
-                            }
+                    case .offline:
+                        do {
+                            transcriptionResult = try await transcribeOffline(audio: resultURL)
+                            pasteTranscribedText(transcriptionResult)
+                        } catch {
+                            print("❌ Offline transcription error: \(error)")
+                            transcriptionResult = "Transcription failed"
+                        }
+                        isTranscribing = false
+                    case .online:
+                        do {
+                            transcriptionResult = try await transcribeOnline(audio: resultURL)
+                            pasteTranscribedText(transcriptionResult)
+                        } catch {
+                            print("❌ Online transcription error: \(error)")
+                            transcriptionResult = "Transcription failed"
+                        }
+                        isTranscribing = false
+                    }
                 } else {
+                    print("⚠️ Recording URL is nil, transcription skipped")
                     isTranscribing = false
                 }
 
