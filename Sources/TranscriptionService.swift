@@ -346,49 +346,37 @@ class TranscriptionService: NSObject, ObservableObject, AVAudioRecorderDelegate 
 
     // MARK: - Paste Handling
     private func pasteTranscribedText(_ text: String) {
-        Task {
-            await MainActor.run {
-                print("📋 Attempting to paste text: \(text)")
-                // Save current clipboard content
+        print("📋 Attempting to paste text: \(text)")
+        let pasteboard = NSPasteboard.general
+        let oldContent = pasteboard.string(forType: .string)
+        
+        pasteboard.clearContents()
+        pasteboard.setString(text, forType: .string)
+        
+        let source = CGEventSource(stateID: .hidSystemState)
+        let cmdDown = CGEvent(keyboardEventSource: source, virtualKey: CGKeyCode(kVK_Command), keyDown: true)
+        let vDown = CGEvent(keyboardEventSource: source, virtualKey: CGKeyCode(kVK_ANSI_V), keyDown: true)
+        vDown?.flags = .maskCommand
+        let vUp = CGEvent(keyboardEventSource: source, virtualKey: CGKeyCode(kVK_ANSI_V), keyDown: false)
+        vUp?.flags = .maskCommand
+        let cmdUp = CGEvent(keyboardEventSource: source, virtualKey: CGKeyCode(kVK_Command), keyDown: false)
+        
+        cmdDown?.post(tap: .cghidEventTap)
+        vDown?.post(tap: .cghidEventTap)
+        vUp?.post(tap: .cghidEventTap)
+        cmdUp?.post(tap: .cghidEventTap)
+        
+        print("✅ Paste command sent successfully")
+        restoreClipboard(oldContent)
+    }
+    
+    private func restoreClipboard(_ oldContent: String?) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            if let oldContent = oldContent {
                 let pasteboard = NSPasteboard.general
-                let oldContent = pasteboard.string(forType: .string)
-                
-                // Copy new text to clipboard
                 pasteboard.clearContents()
-                pasteboard.setString(text, forType: .string)
-                
-                // Simulate Cmd+V keystroke
-                let source = CGEventSource(stateID: .hidSystemState)
-                
-                // Create Command down event
-                let cmdDown = CGEvent(keyboardEventSource: source, virtualKey: CGKeyCode(kVK_Command), keyDown: true)
-                
-                // Create 'v' key down event
-                let vDown = CGEvent(keyboardEventSource: source, virtualKey: CGKeyCode(kVK_ANSI_V), keyDown: true)
-                vDown?.flags = .maskCommand
-                
-                // Create 'v' key up event
-                let vUp = CGEvent(keyboardEventSource: source, virtualKey: CGKeyCode(kVK_ANSI_V), keyDown: false)
-                vUp?.flags = .maskCommand
-                
-                // Create Command up event
-                let cmdUp = CGEvent(keyboardEventSource: source, virtualKey: CGKeyCode(kVK_Command), keyDown: false)
-                
-                // Post the events
-                cmdDown?.post(tap: .cghidEventTap)
-                vDown?.post(tap: .cghidEventTap)
-                vUp?.post(tap: .cghidEventTap)
-                cmdUp?.post(tap: .cghidEventTap)
-                
-                print("✅ Paste command sent successfully")
-
-                // Restore previous clipboard content after a short delay
-//                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-//                    if let oldContent = oldContent {
-//                        pasteboard.clearContents()
-//                        pasteboard.setString(oldContent, forType: .string)
-//                    }
-//                }
+                pasteboard.setString(oldContent, forType: .string)
+                print("📋 Clipboard content restored.")
             }
         }
     }
