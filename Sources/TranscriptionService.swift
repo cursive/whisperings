@@ -119,7 +119,6 @@ class TranscriptionService: NSObject, ObservableObject, AVAudioRecorderDelegate 
                 print("🛑 Stopping recording...")
                 isRecording = false
                 transcriptionResult = "Transcribing..."
-                pasteTranscribedText("Transcribing...")
 
                 if let resultURL = await stopRecording() {
                     
@@ -155,7 +154,6 @@ class TranscriptionService: NSObject, ObservableObject, AVAudioRecorderDelegate 
                 print("▶️ Starting recording...")
                 isRecording = true
                 transcriptionResult = ""
-                pasteTranscribedText("Say something...")
                 await startRecording()
             }
         }
@@ -239,14 +237,16 @@ class TranscriptionService: NSObject, ObservableObject, AVAudioRecorderDelegate 
 
     private func startAudioLevelMonitoring() {
         Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] timer in
-            guard let self = self, self.isRecording else {
-                timer.invalidate()
-                return
+            Task { @MainActor in
+                guard let self = self, self.isRecording else {
+                    timer.invalidate()
+                    return
+                }
+                self.audioRecorder?.updateMeters()
+                let averagePower = self.audioRecorder?.averagePower(forChannel: 0) ?? -160
+                let peakPower = self.audioRecorder?.peakPower(forChannel: 0) ?? -160
+                print("📊 Audio Levels - Avg: \(averagePower) dB, Peak: \(peakPower) dB")
             }
-            self.audioRecorder?.updateMeters()
-            let averagePower = self.audioRecorder?.averagePower(forChannel: 0) ?? -160
-            let peakPower = self.audioRecorder?.peakPower(forChannel: 0) ?? -160
-            print("📊 Audio Levels - Avg: \(averagePower) dB, Peak: \(peakPower) dB")
         }
     }
 
