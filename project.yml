@@ -8,9 +8,6 @@ packages:
   WhisperKit:
     url: https://github.com/argmaxinc/WhisperKit.git
     branch: main
-  KeychainAccess:
-    url: https://github.com/kishikawakatsumi/KeychainAccess.git
-    version: 4.2.2
   KeyboardShortcuts:
     url: https://github.com/sindresorhus/KeyboardShortcuts.git
     from: 2.0.0
@@ -33,5 +30,4 @@ targets:
         INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription: "We need Bluetooth access to use AirPods for audio recording"
     dependencies:
       - package: WhisperKit
-      - package: KeychainAccess
       - package: KeyboardShortcuts

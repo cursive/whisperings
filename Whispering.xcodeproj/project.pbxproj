@@ -3,19 +3,17 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1935BBDA24FD2351FED07F20 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A0B8C779C39E5C5985C23C /* Constants.swift */; };
 		1AB21A2AF9DBD36C1FEADF14 /* TranscriptionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E737B78256AA9690F0817F96 /* TranscriptionService.swift */; };
 		1D41647255B251719CB2DADD /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63A9F7DAFE2FA6C696551EA /* OnboardingView.swift */; };
 		455E41EC885C40A73D130CF2 /* YourAccessibilityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85ED51AAA23B0F54D9B5388E /* YourAccessibilityManager.swift */; };
 		54A417970F38A592F14355EC /* WhisperModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CD987623E701CDD85C3C583 /* WhisperModel.swift */; };
 		624FCC9F7A64EF9E27E27068 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CD041D513EFE51D825F57C /* SettingsView.swift */; };
-		6F1F65380D64E11943665CA6 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = 6695D23E344FD1D569AE38BB /* KeychainAccess */; };
+		6F1F65380D64E11943665CA6 /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 17D1952162F0F991960D83FD /* KeyboardShortcuts */; };
 		9ED7407D7363CDB110D0D6B9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FC0D67E7D3961A325D9717 /* ContentView.swift */; };
-		C06F27B76103CA3A5C604237 /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 17D1952162F0F991960D83FD /* KeyboardShortcuts */; };
 		D22900DA4487AD7D7823FF77 /* WhisperKit in Frameworks */ = {isa = PBXBuildFile; productRef = DC3E7EE9CFB9C076CAD9F775 /* WhisperKit */; };
 		D93A96A494DE9F4C7A996A2E /* WhisperingApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDA29DA1099E9E651AE4F011 /* WhisperingApp.swift */; };
 /* End PBXBuildFile section */
@@ -30,7 +28,6 @@
 		B63A9F7DAFE2FA6C696551EA /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		D2CD041D513EFE51D825F57C /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		DDA29DA1099E9E651AE4F011 /* WhisperingApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhisperingApp.swift; sourceTree = "<group>"; };
-		E1A0B8C779C39E5C5985C23C /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		E737B78256AA9690F0817F96 /* TranscriptionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -40,8 +37,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D22900DA4487AD7D7823FF77 /* WhisperKit in Frameworks */,
-				6F1F65380D64E11943665CA6 /* KeychainAccess in Frameworks */,
-				C06F27B76103CA3A5C604237 /* KeyboardShortcuts in Frameworks */,
+				6F1F65380D64E11943665CA6 /* KeyboardShortcuts in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -85,7 +81,6 @@
 		4AA874AEB41E95E29D757C74 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				E1A0B8C779C39E5C5985C23C /* Constants.swift */,
 				6263401813081379AEE71E58 /* Info.plist */,
 				E737B78256AA9690F0817F96 /* TranscriptionService.swift */,
 				835F59E8649FFDEE724FF7AC /* Whispering.entitlements */,
@@ -114,7 +109,6 @@
 			name = Whispering;
 			packageProductDependencies = (
 				DC3E7EE9CFB9C076CAD9F775 /* WhisperKit */,
-				6695D23E344FD1D569AE38BB /* KeychainAccess */,
 				17D1952162F0F991960D83FD /* KeyboardShortcuts */,
 			);
 			productName = Whispering;
@@ -129,6 +123,8 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+				};
 			};
 			buildConfigurationList = CCA5BBFBA3CF1AC8A805AEEF /* Build configuration list for PBXProject "Whispering" */;
 			compatibilityVersion = "Xcode 14.0";
@@ -139,11 +135,12 @@
 				en,
 			);
 			mainGroup = 3F3B3A0A446986DFB1B8E828;
+			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				12EF188A9556D9487854F533 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */,
-				FDF72A885E132A137C60FEB5 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
 				04B35E2016575A501041FBD4 /* XCRemoteSwiftPackageReference "WhisperKit" */,
 			);
+			preferredProjectObjectVersion = 54;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -157,7 +154,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1935BBDA24FD2351FED07F20 /* Constants.swift in Sources */,
 				9ED7407D7363CDB110D0D6B9 /* ContentView.swift in Sources */,
 				1D41647255B251719CB2DADD /* OnboardingView.swift in Sources */,
 				624FCC9F7A64EF9E27E27068 /* SettingsView.swift in Sources */,
@@ -372,14 +368,6 @@
 				minimumVersion = 2.0.0;
 			};
 		};
-		FDF72A885E132A137C60FEB5 /* XCRemoteSwiftPackageReference "KeychainAccess" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/kishikawakatsumi/KeychainAccess.git";
-			requirement = {
-				kind = exactVersion;
-				version = 4.2.2;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -387,11 +375,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 12EF188A9556D9487854F533 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */;
 			productName = KeyboardShortcuts;
-		};
-		6695D23E344FD1D569AE38BB /* KeychainAccess */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = FDF72A885E132A137C60FEB5 /* XCRemoteSwiftPackageReference "KeychainAccess" */;
-			productName = KeychainAccess;
 		};
 		DC3E7EE9CFB9C076CAD9F775 /* WhisperKit */ = {
 			isa = XCSwiftPackageProductDependency;
