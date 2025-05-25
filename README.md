@@ -2,6 +2,8 @@
 
 A simple macOS menubar app built with SwiftUI and WhisperKit.
 
+Now moving to ioS
+
 ## Requirements
 
 - Apple Silicon Mac
